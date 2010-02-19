@@ -7,7 +7,7 @@ use Dancer::FileUtils 'path';
 
 use base 'Dancer::Template::Abstract';
 
-our $VERSION = 0.1;
+our $VERSION = 0.02;
 
 our $ENGINE;
 
@@ -56,14 +56,17 @@ Dancer::Template::Tenjin - Tenjin wrapper for Dancer
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =head1 SYNOPSIS
 
 	# in your config.yml
 	template: "tenjin"
 
-	# note: templates must used the '.tt' extension
+	# in your webapp
+	use Tenjin;
+
+	# note: templates must use the '.tt' extension
 
 =head1 DESCRIPTION
 
@@ -78,12 +81,25 @@ embedded Perl code instead of defining its own language.
 In order to use this engine, you need to set your webapp's template engine
 in your app's configuration file (config.yml) like so:
 
-    template: "tenjin"
+	template: "tenjin"
 
 You can also directly set it in your app code with the B<set> keyword.
 
 Now you can create Tenjin templates normally, but note that due to a
-Dancer restriction your templates files must end in the '.tt' extension.
+Dancer restriction your template files must end in the '.tt' extension as
+Dancer automatically adds this extension to the template names you declare
+in your apps.
+
+=head1 METHODS
+
+=head2 init()
+
+Initializes a template engine by generating a new instance of L<Tenjin>.
+
+=head2 render( $template, $tokens )
+
+Receives a template name and a hash-ref of key-value pairs to pass to
+the template, and returns the template rendered by Tenjin.
 
 =head1 SEE ALSO
 
