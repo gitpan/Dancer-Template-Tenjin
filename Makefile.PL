@@ -1,21 +1,59 @@
+
 use strict;
 use warnings;
-use ExtUtils::MakeMaker;
 
-WriteMakefile(
-    NAME                => 'Dancer::Template::Tenjin',
-    AUTHOR              => q{Ido Perlmuter <ido@ido50.net>},
-    VERSION_FROM        => 'lib/Dancer/Template/Tenjin.pm',
-    ABSTRACT_FROM       => 'lib/Dancer/Template/Tenjin.pm',
-    ($ExtUtils::MakeMaker::VERSION >= 6.3002
-      ? ('LICENSE'=> 'perl')
-      : ()),
-    PL_FILES            => {},
-    PREREQ_PM		=> {
-        'Test::More'		=> 0,
-        'Dancer'		=> 1.15,
-        'Tenjin'		=> 0.051,
-    },
-    dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-    clean               => { FILES => 'Dancer-Template-Tenjin-*' },
+BEGIN { require 5.006; }
+
+use ExtUtils::MakeMaker 6.31;
+
+
+
+my %WriteMakefileArgs = (
+  'ABSTRACT' => 'Tenjin wrapper for Dancer',
+  'AUTHOR' => 'Ido Perlmuter <ido@ido50.net>',
+  'BUILD_REQUIRES' => {
+    'Dancer::FileUtils' => '0',
+    'Test::More' => '0'
+  },
+  'CONFIGURE_REQUIRES' => {
+    'ExtUtils::MakeMaker' => '6.31'
+  },
+  'DISTNAME' => 'Dancer-Template-Tenjin',
+  'EXE_FILES' => [],
+  'LICENSE' => 'perl',
+  'NAME' => 'Dancer::Template::Tenjin',
+  'PREREQ_PM' => {
+    'Carp' => '0',
+    'Dancer::Config' => '0',
+    'Dancer::Template::Abstract' => '0',
+    'File::Basename' => '0',
+    'Tenjin' => '0',
+    'Try::Tiny' => '0'
+  },
+  'VERSION' => '0.4',
+  'test' => {
+    'TESTS' => 't/*.t'
+  }
 );
+
+
+unless ( eval { ExtUtils::MakeMaker->VERSION(6.56) } ) {
+  my $br = delete $WriteMakefileArgs{BUILD_REQUIRES};
+  my $pp = $WriteMakefileArgs{PREREQ_PM};
+  for my $mod ( keys %$br ) {
+    if ( exists $pp->{$mod} ) {
+      $pp->{$mod} = $br->{$mod} if $br->{$mod} > $pp->{$mod};
+    }
+    else {
+      $pp->{$mod} = $br->{$mod};
+    }
+  }
+}
+
+delete $WriteMakefileArgs{CONFIGURE_REQUIRES}
+  unless eval { ExtUtils::MakeMaker->VERSION(6.52) };
+
+WriteMakefile(%WriteMakefileArgs);
+
+
+

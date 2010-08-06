@@ -2,14 +2,11 @@ NAME
     Dancer::Template::Tenjin - Tenjin wrapper for Dancer
 
 VERSION
-    Version 0.3
+    version 0.4
 
 SYNOPSIS
             # in your config.yml
             template: "tenjin"
-
-            # in your webapp
-            use Tenjin;
 
             # note: templates must use the '.tt' extension
 
@@ -46,7 +43,7 @@ SEE ALSO
     Dancer, Tenjin
 
 AUTHOR
-    Ido Perlmuter, "<ido at ido50.net>"
+    Ido Perlmuter, "<ido at ido50 dot net>"
 
 ACKNOWLEDGEMENTS
     *   Alexis Sukrieh, "<sukria@cpan.org>"
@@ -57,6 +54,10 @@ ACKNOWLEDGEMENTS
     *   Sawyer X, "<xsawyerx at cpan.org>"
 
         Submitted helpful changes for version 0.3.
+
+    *   Franck Cuny "<franck at lumberjaph dot net>"
+
+        Submitted a simple test for version 0.4.
 
 TODO
     * Non-file sources

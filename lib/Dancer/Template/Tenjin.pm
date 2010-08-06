@@ -1,51 +1,20 @@
 package Dancer::Template::Tenjin;
+BEGIN {
+  $Dancer::Template::Tenjin::VERSION = '0.4';
+}
 
 use strict;
 use warnings;
+
 use Tenjin;
-use Dancer::FileUtils 'path';
+use Dancer::Config 'setting';
+use File::Basename;
+use Try::Tiny;
+use Carp;
 
 use base 'Dancer::Template::Abstract';
 
-our $VERSION = 0.3;
-
-our $ENGINE;
-
-sub init {
-	my $self = shift;
-
-	# set Tenjin configuration options
-	my $conf = { postfix => '.tt' };
-
-	$conf->{path} = path($self->{settings}{'appdir'}, 'views')
-		if $self->{settings} && $self->{settings}{'appdir'};
-
-	# get an instance of Tenjin
-	$ENGINE = Tenjin->new($conf);
-}
-
-sub render($$$) {
-	my ($self, $template, $tokens) = @_;
-
-	die "'$template' is not a regular file"
-		if !ref($template) && (!-f $template);
-
-	# ignore 'bad' tokens - this is here because for some reason
-	# Dancer is passing the entire user agent as a token, and I can't
-	# find the cause of that yet.
-	my %vars = %$tokens;
-	foreach (keys %vars) {
-		delete $vars{$_} if m/[ ()]/;
-	}
-
-	return $ENGINE->render($template, \%vars) or die $ENGINE->error;
-}
-
-1;
-
-__END__
-
-=pod
+# ABSTRACT: Tenjin wrapper for Dancer
 
 =head1 NAME
 
@@ -53,15 +22,12 @@ Dancer::Template::Tenjin - Tenjin wrapper for Dancer
 
 =head1 VERSION
 
-Version 0.3
+version 0.4
 
 =head1 SYNOPSIS
 
 	# in your config.yml
 	template: "tenjin"
-
-	# in your webapp
-	use Tenjin;
 
 	# note: templates must use the '.tt' extension
 
@@ -93,10 +59,56 @@ in your apps.
 
 Initializes a template engine by generating a new instance of L<Tenjin>.
 
+=cut
+
+sub init {
+	my $self = shift;
+
+	# set Tenjin configuration options
+	my $conf = { postfix => '.tt' };
+
+	$conf->{path} = [setting('views')];
+
+	# get an instance of Tenjin
+	$self->{engine} = Tenjin->new($conf);
+}
+
 =head2 render( $template, $tokens )
 
 Receives a template name and a hash-ref of key-value pairs to pass to
 the template, and returns the template rendered by Tenjin.
+
+=cut
+
+sub render($$$) {
+	my ($self, $template, $tokens) = @_;
+
+	croak "'$template' is not a regular file"
+		if !ref($template) && (!-f $template);
+
+	# Dancer seems to be sending the full filename (i.e. including full path)
+	# of the template, while we only need the relative path, so let's
+	# strip the base path from the template filename
+	foreach (@{$self->{engine}->{path}}) {
+		my $basepath = $_;
+		$basepath .= '/' unless $basepath =~ m!/^!;
+
+		next unless $template =~ m/^$basepath/;
+
+		$template =~ s/^$basepath//;
+	}
+
+	# ignore 'bad' tokens - this is here because for some reason
+	# Dancer is passing the entire user agent as a token, and I can't
+	# find the cause of that yet.
+	my %vars = %$tokens;
+	foreach (keys %vars) {
+		delete $vars{$_} if m/[ ()]/;
+	}
+
+	my $output = try { $self->{engine}->render($template, \%vars) } catch { croak $_ };
+	return $output;
+}
 
 =head1 SEE ALSO
 
@@ -104,7 +116,7 @@ L<Dancer>, L<Tenjin>
 
 =head1 AUTHOR
 
-Ido Perlmuter, C<< <ido at ido50.net> >>
+Ido Perlmuter, C<< <ido at ido50 dot net> >>
 
 =head1 ACKNOWLEDGEMENTS
 
@@ -118,6 +130,10 @@ on which this module is based.
 =item * Sawyer X, C<< <xsawyerx at cpan.org> >>
 
 Submitted helpful changes for version 0.3.
+
+=item * Franck Cuny C<< <franck at lumberjaph dot net> >>
+
+Submitted a simple test for version 0.4.
 
 =back
 
@@ -181,3 +197,5 @@ by the Free Software Foundation; or the Artistic License.
 See http://dev.perl.org/licenses/ for more information.
 
 =cut
+
+1;
