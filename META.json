@@ -4,7 +4,7 @@
       "Ido Perlmuter <ido@ido50.net>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.101900, CPAN::Meta::Converter version 2.102160",
+   "generated_by" : "Dist::Zilla version 4.200004, CPAN::Meta::Converter version 2.110580",
    "license" : [
       "perl_5"
    ],
@@ -25,15 +25,16 @@
             "Dancer::Config" : 0,
             "Dancer::Template::Abstract" : 0,
             "File::Basename" : 0,
-            "Tenjin" : 0,
+            "Tenjin" : "0.070001",
             "Try::Tiny" : 0,
-            "perl" : "5.006"
+            "perl" : "5.008"
          }
       },
       "test" : {
          "requires" : {
             "Dancer::FileUtils" : 0,
-            "Test::More" : 0
+            "Test::More" : 0,
+            "utf8" : 0
          }
       }
    },
@@ -46,6 +47,6 @@
          "web" : "http://github.com/ido50/Dancer-Template-Tenjin/tree"
       }
    },
-   "version" : "0.4"
+   "version" : "0.5"
 }
 

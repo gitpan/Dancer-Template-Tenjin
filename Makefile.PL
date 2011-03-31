@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-BEGIN { require 5.006; }
+BEGIN { require 5.008; }
 
 use ExtUtils::MakeMaker 6.31;
 
@@ -13,7 +13,8 @@ my %WriteMakefileArgs = (
   'AUTHOR' => 'Ido Perlmuter <ido@ido50.net>',
   'BUILD_REQUIRES' => {
     'Dancer::FileUtils' => '0',
-    'Test::More' => '0'
+    'Test::More' => '0',
+    'utf8' => '0'
   },
   'CONFIGURE_REQUIRES' => {
     'ExtUtils::MakeMaker' => '6.31'
@@ -27,10 +28,10 @@ my %WriteMakefileArgs = (
     'Dancer::Config' => '0',
     'Dancer::Template::Abstract' => '0',
     'File::Basename' => '0',
-    'Tenjin' => '0',
+    'Tenjin' => '0.070001',
     'Try::Tiny' => '0'
   },
-  'VERSION' => '0.4',
+  'VERSION' => '0.5',
   'test' => {
     'TESTS' => 't/*.t'
   }

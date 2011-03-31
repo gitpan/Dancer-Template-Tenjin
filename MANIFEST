@@ -1,4 +1,5 @@
 Changes
+INSTALL
 LICENSE
 MANIFEST
 MANIFEST.SKIP
@@ -6,11 +7,14 @@ META.json
 META.yml
 Makefile.PL
 README
+SIGNATURE
 dist.ini
 lib/Dancer/Template/Tenjin.pm
 t/00-load.t
 t/01-basic.t
 t/01-basic.tt
-t/manifest.t
+t/01-encoding.tt
+t/01-encoding2.tt
+t/release-dist-manifest.t
 t/release-pod-coverage.t
 t/release-pod-syntax.t
